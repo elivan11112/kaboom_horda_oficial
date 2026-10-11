@@ -48,7 +48,7 @@
             top: 0;
             left: 0;
             width: 100%;
-            height: calc(100% - 1.5em);
+            height: 100%;
             border: none;
         }
 
@@ -56,33 +56,11 @@
             height: 100%;
         }
 
+        /* Barra inferior (Manual / Edit / GitHub) oculta */
         footer {
-            color: grey;
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            left: 0;
-            z-index: 100;
-            text-align: center;
-            font-size: 1em;
-            margin-bottom: 0.25em;
+            display: none !important;
         }
 
-        footer a {
-            color: grey;
-        }
-
-        .embed footer,
-        .embed footer a {
-            color: black;
-        }
-
-        #fullscreen {
-            position: absolute;
-            right: 0.25rem;
-            bottom: 0;
-            cursor: pointer;
-        }
         .lds-ripple {
             width: 80px;
             height: 80px;
@@ -128,7 +106,7 @@
     </style>
 </head>
 
-<body id="root">
+<body id="root" class="nofooter">
     <div id="loader" class="lds-ripple">
         <div></div>
         <div></div>
@@ -155,14 +133,15 @@
         sandbox="allow-popups allow-forms allow-scripts allow-same-origin">
     </iframe>
     <footer id="footer">
-        <a target="blank" rel="nofollow noopener" href="https://{{ site.github.owner_name }}.github.io/{{ site.github.repository_name }}/README">Manual</a>
-        <a target="blank" rel="nofollow noopener" href="https://arcade.makecode.com/#pub:github:{{ site.github.owner_name }}/{{ site.github.repository_name }}">Edit</a>
-        <a target="blank" rel="nofollow noopener" href="https://github.com/{{ site.github.owner_name }}/{{ site.github.repository_name }}">GitHub</a>
         <span id="version"></span>
         <div id="fullscreen">⇲</div>
     </footer>
     <script type="text/javascript">
-        makeCodeRun({ js: "./assets/js/binary.js?v={{ site.github.build_revision }}" });
+        if (typeof makeCodeRun === "function") {
+            makeCodeRun({ js: "./assets/js/binary.js?v={{ site.github.build_revision }}" });
+        } else {
+            console.error("No se pudo cargar ./assets/js/loader.js. Comprueba que existe la carpeta assets/js/ en el repositorio (publica de nuevo desde MakeCode).");
+        }
 
         if (window.location && window.location.search) {
             var noFooter = /nofooter=1/i.test(window.location.search);
