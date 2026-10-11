@@ -28,6 +28,13 @@
     <script type="text/javascript" src="./assets/js/loader.js?v=1"></script>
     <script type="text/javascript" src="./assets/js/custom.js?v=1"></script>
     <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+        }
+
         body {
             background: black;
             color: white;
@@ -49,43 +56,17 @@
             border: none;
         }
 
-        .nofooter iframe {
-            height: 100%;
+        /* Barra inferior (Manual / Edit / GitHub) oculta en todos los dispositivos */
+        footer, #footer {
+            display: none !important;
+            visibility: hidden !important;
         }
 
-        footer {
-            color: grey;
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            left: 0;
-            z-index: 100;
-            text-align: center;
-            font-size: 1em;
-            margin-bottom: 0.25em;
-        }
-
-        footer a {
-            color: grey;
-        }
-
-        .embed footer,
-        .embed footer a {
-            color: black;
-        }
-
-        #fullscreen {
-            position: absolute;
-            right: 0.25rem;
-            bottom: 0;
-            cursor: pointer;
-        }
         .lds-ripple {
             width: 80px;
             height: 80px;
             margin: auto;
             position: absolute;
-            margin: auto;
             top: 0;
             right: 0;
             bottom: 0;
@@ -125,7 +106,7 @@
     </style>
 </head>
 
-<body id="root">
+<body id="root" class="nofooter">
     <div id="loader" class="lds-ripple">
         <div></div>
         <div></div>
@@ -156,6 +137,23 @@
         <div id="fullscreen">⇲</div>
     </footer>
     <script type="text/javascript">
+        // Pantalla completa: sin consola, botones A/B, cruceta ni Menu.
+        // Añade los parametros al iframe del simulador antes de que cargue.
+        (function () {
+            var frame = document.getElementById("simframe");
+            var extra = "hideSimButtons=1&fullscreen=1&autofocus=1";
+
+            function fixSrc() {
+                var src = frame.getAttribute("src");
+                if (src && src.indexOf("hideSimButtons=1") < 0) {
+                    frame.setAttribute("src", src + (src.indexOf("?") < 0 ? "?" : "&") + extra);
+                }
+            }
+
+            new MutationObserver(fixSrc).observe(frame, { attributes: true, attributeFilter: ["src"] });
+            fixSrc();
+        })();
+
         makeCodeRun({ js: "./assets/js/binary.js?v=1" });
 
         if (window.location && window.location.search) {
@@ -176,9 +174,6 @@
             }
         }
     </script>
-</body>
-
-</html>
 </body>
 
 </html>
