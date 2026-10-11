@@ -25,8 +25,8 @@
     <link rel="apple-touch-icon" href="./icon.png">
     <link rel="icon" type="image/png" href="./icon.png">
     <link rel="shortcut icon" href="./icon.png">
-    <script type="text/javascript" src="./assets/js/loader.js?v=1"></script>
-    <script type="text/javascript" src="./assets/js/custom.js?v=1"></script>
+    <script type="text/javascript" src="./assets/js/loader.js?v=2"></script>
+    <script type="text/javascript" src="./assets/js/custom.js?v=2"></script>
     <style>
         html, body {
             margin: 0;
@@ -138,13 +138,20 @@
     </footer>
     <script type="text/javascript">
         // Solo en PC: pantalla completa, sin consola, botones A/B, cruceta ni Menu.
-        // En movil y dispositivos tactiles no se toca nada.
+        // En movil y dispositivos tactiles no se toca nada (se queda como el original).
+        // Pruebas: anade ?movil=1 o ?pc=1 a la direccion para forzar un modo.
         (function () {
+            var query = window.location.search || "";
+            var forceMobile = /movil=1/i.test(query);
+            var forcePC = /pc=1/i.test(query);
+
             var ua = navigator.userAgent || "";
-            var isMobile =
-                /Android|iPhone|iPad|iPod|Mobile|Silk|Opera Mini/i.test(ua) ||
-                (navigator.maxTouchPoints > 1 && window.matchMedia("(pointer: coarse)").matches) ||
-                (/Macintosh/i.test(ua) && navigator.maxTouchPoints > 1);
+            var uaMobile = /Android|iPhone|iPad|iPod|Mobile|Silk|Opera Mini|IEMobile/i.test(ua);
+            var touchDevice = navigator.maxTouchPoints > 0 &&
+                window.matchMedia && window.matchMedia("(pointer: coarse)").matches;
+            var smallScreen = Math.min(screen.width, screen.height) <= 820;
+
+            var isMobile = forceMobile || (!forcePC && (uaMobile || touchDevice || smallScreen));
 
             if (isMobile) return;
 
@@ -162,7 +169,7 @@
             fixSrc();
         })();
 
-        makeCodeRun({ js: "./assets/js/binary.js?v=1" });
+        makeCodeRun({ js: "./assets/js/binary.js?v=2" });
 
         if (window.location && window.location.search) {
             var noFooter = /nofooter=1/i.test(window.location.search);
