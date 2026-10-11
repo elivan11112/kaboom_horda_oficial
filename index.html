@@ -137,9 +137,17 @@
         <div id="fullscreen">⇲</div>
     </footer>
     <script type="text/javascript">
-        // Pantalla completa: sin consola, botones A/B, cruceta ni Menu.
-        // Añade los parametros al iframe del simulador antes de que cargue.
+        // Solo en PC: pantalla completa, sin consola, botones A/B, cruceta ni Menu.
+        // En movil y dispositivos tactiles no se toca nada.
         (function () {
+            var ua = navigator.userAgent || "";
+            var isMobile =
+                /Android|iPhone|iPad|iPod|Mobile|Silk|Opera Mini/i.test(ua) ||
+                (navigator.maxTouchPoints > 1 && window.matchMedia("(pointer: coarse)").matches) ||
+                (/Macintosh/i.test(ua) && navigator.maxTouchPoints > 1);
+
+            if (isMobile) return;
+
             var frame = document.getElementById("simframe");
             var extra = "hideSimButtons=1&fullscreen=1&autofocus=1";
 
